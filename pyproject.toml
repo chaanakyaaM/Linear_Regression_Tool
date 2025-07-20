@@ -1,5 +1,5 @@
 [project]
-name = "linear-regression"
+name = "linear_regression_Tool"
 version = "0.1.0"
 description = "A simple web tool for performing linear regression on clean data."
 readme = "README.md"

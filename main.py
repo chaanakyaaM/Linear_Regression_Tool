@@ -1,14 +1,15 @@
 import pandas as pd
 import streamlit as st
+import plotly.express as px
+import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_absolute_error
-import matplotlib.pyplot as plt
-import plotly.express as px
 
 # Set up the title of the app
 st.title("Linear Regression ")
 st.write("Linear Regression aims to model the relationship between a dependent variable y (target) and one or more independent variables X (features) by fitting a linear equation to the observed data.")
+st.write("**NOTE:** Make sure your data is clean and properly formatted before uploading.")
 
 # --- Session State Initialization ---
 # Initialize session state variables if they don't exist
@@ -22,30 +23,30 @@ if "x_test" not in st.session_state:
     st.session_state.x_test = None
 if "y_test" not in st.session_state:
     st.session_state.y_test = None
-if "x" not in st.session_state: # Store features
+if "x" not in st.session_state:
     st.session_state.x = None
-if "y" not in st.session_state: # Store target
+if "y" not in st.session_state: 
     st.session_state.y = None
-if "selected_features" not in st.session_state: # Store selected features list
+if "selected_features" not in st.session_state: 
     st.session_state.selected_features = []
-if "y_pred" not in st.session_state: # Store predictions
+if "y_pred" not in st.session_state: 
     st.session_state.y_pred = None
-if "x_train" not in st.session_state: # Store training features
+if "x_train" not in st.session_state: 
     st.session_state.x_train = None
-if "y_train" not in st.session_state: # Store training target
+if "y_train" not in st.session_state: 
     st.session_state.y_train = None
 
 st.session_state.target_variable = None
 
-# --- File Upload Functionality ---
+# --- File Upload  ---
 uploaded_file = st.file_uploader('Upload CSV file', type=["csv"])
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     st.success("File uploaded successfully!")
     st.write("Dataset Preview:")
-    st.session_state.dataset = df.copy() # Store a copy of the original
-    st.session_state.cleaned_dataset = df.copy() # Initialize cleaned_dataset with the original
+    st.session_state.dataset = df.copy() 
+    st.session_state.cleaned_dataset = df.copy() 
     st.write(df.head())
 
 
