@@ -298,7 +298,6 @@ if uploaded_file is not None:
                             st.plotly_chart(fig_reg, use_container_width=True)
                         else:
                             st.warning("No prediction results available to plot the regression graph.")
-                        # --- End of Linear Regression Visualization ---
                         
                     except Exception as e:
                         st.error(f"An error occurred during prediction or evaluation: {e}")
