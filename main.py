@@ -13,6 +13,7 @@ st.write("**NOTE:** Make sure your data is clean and properly formatted before u
 
 # --- Session State Initialization ---
 # Initialize session state variables if they don't exist
+st.session_state.y_pred = None
 if "dataset" not in st.session_state:
     st.session_state.dataset = None
 if "cleaned_dataset" not in st.session_state: # New state for cleaned data
@@ -243,7 +244,9 @@ if uploaded_file is not None:
                     y_test = st.session_state.y_test
 
                     try:
-                        predict = model.predict(x_test)             
+                        predict = model.predict(x_test) 
+                        st.write(f'{len(predict)},{len(st.session_state.y_test)}')
+                        st.session_state.y_pred = predict
                         st.subheader("Prediction Results:")
                         results_df = pd.DataFrame({
                             'Actual': y_test.flatten(),
@@ -304,10 +307,26 @@ if uploaded_file is not None:
             else:
                 st.info("Please train the model first to see predictions and evaluations.")
 
-            plt.plot(st.session_state.x,st.session_state.y, label="Data Points")
-            plt.xlabel("Features")
-            plt.ylabel("Target Variable")
-            plt.show()
+            # Feature to Feature Scatter Plot
+            with st.expander("Feature to Feature Scatter Plot"):
+                st.subheader("🔹 Scatter Plot: Feature vs Feature")
+
+                scatter_x = st.selectbox("Select X-axis feature:", numerical_cols, key="scatter_x")
+                scatter_y = st.selectbox("Select Y-axis feature:", numerical_cols, key="scatter_y")
+
+                # Check if both features are selected
+                if scatter_x and scatter_y:
+                    fig_scatter = px.scatter(
+                        st.session_state.cleaned_dataset,
+                        x=scatter_x,
+                        y=scatter_y,
+                        title=f"Scatter Plot: {scatter_x} vs {scatter_y}",
+                        labels={scatter_x: scatter_x, scatter_y: scatter_y},
+                    )
+                    fig_scatter.update_traces(marker=dict(color='white', opacity=0.7))
+                    fig_scatter.update_layout(height=450)
+                    st.plotly_chart(fig_scatter, use_container_width=True)
+
 
 elif uploaded_file is None and st.session_state.dataset is None:
     st.info("Please upload a CSV file to get started!")
