@@ -69,12 +69,11 @@ if uploaded_file is not None:
         if st.session_state.cleaned_dataset is not None:
             # Only show numerical columns for feature selection
             numerical_cols = st.session_state.cleaned_dataset.select_dtypes(include=['number']).columns.tolist()
-
             # Multiselect for features
             st.session_state.selected_features = st.multiselect(
                 "Select features for the model:",
                 numerical_cols,
-                default=st.session_state.selected_features if st.session_state.selected_features else []
+                default=st.session_state.cleaned_dataset.columns[:-1] 
             )
             
             # Selectbox for target variable
@@ -245,7 +244,6 @@ if uploaded_file is not None:
 
                     try:
                         predict = model.predict(x_test) 
-                        st.write(f'{len(predict)},{len(st.session_state.y_test)}')
                         st.session_state.y_pred = predict
                         st.subheader("Prediction Results:")
                         results_df = pd.DataFrame({
